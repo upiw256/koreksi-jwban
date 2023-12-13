@@ -1,25 +1,57 @@
 <template>
   <div>
-    <!-- First input field with v-model to bind the value to the reactive variable -->
-    <input v-model="inputText1" placeholder="Input kunci Jawaban..." />
+    <label class="form-control w-full max-w-xs">
+      <div class="label">
+        <span class="label-text">Jawaban yang benar</span>
+        <span class="label-text-alt">Jumlah soal {{ characterCount1 }}</span>
+      </div>
+      <input
+        v-model="inputText1"
+        placeholder="Input kunci Jawaban..."
+        class="input input-bordered w-full max-w-xs"
+      />
+      <div class="label">
+        <span class="label-text">Hasil jawaban siswa</span>
+      </div>
+      <input
+        v-model="inputText2"
+        placeholder="Input Hasil siswa..."
+        class="input input-bordered w-full max-w-xs"
+        v-bind:maxlength="characterCount1"
+      />
+      <div class="label">
+        <span class="label-text-alt"
+          >Jumlah jawaban: {{ characterCount2 }}</span
+        >
+      </div>
+    </label>
 
-    <!-- Second input field with v-model to bind the value to the reactive variable -->
-    <input v-model="inputText2" placeholder="Input Hasil siswa..." />
+    <div>
+      <!-- Second input field with v-model to bind the value to the reactive variable -->
 
-    <!-- <p>Processed Text 1: {{ processedText1 }}</p>
-    <p>Processed Text 2: {{ processedText2 }}</p> -->
+      <!-- <p>Processed Text 1: {{ processedText1 }}</p>
+      <p>Processed Text 2: {{ processedText2 }}</p> -->
+      <!-- 
+      <p>Jumlah soal: {{ characterCount1 }}</p>
+      <p>Jumlah jawaban: {{ characterCount2 }}</p> -->
 
-    <p>Jumlah soal: {{ characterCount1 }}</p>
-    <p>Jumlah jawaban: {{ characterCount2 }}</p>
+      <!-- Display the number of characters that are the same -->
+      <p>
+        Jumlah Yang Benar:
+        <label class="text-green-500 font-bold text-lg">{{
+          sameCharacterCount
+        }}</label>
+      </p>
 
-    <!-- Display the number of characters that are the same -->
-    <p>Jawaban Yang Benar: {{ sameCharacterCount }}</p>
-
-    <!-- Display the positions of differing characters -->
-    <p v-if="differingPositions.length > 0">
-      Jawaban yang salah: No. {{ differingPositions.join(", ") }}
-    </p>
-    <p v-else>Tidak ada yang salah</p>
+      <!-- Display the positions of differing characters -->
+      <p v-if="differingPositions.length > 0">
+        Jawaban yang salah: No.
+        <label class="text-red-500 font-bold text-lg">{{
+          differingPositions.join(", ")
+        }}</label>
+      </p>
+      <p v-else>Tidak ada yang salah</p>
+    </div>
   </div>
 </template>
 

@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.10"
+    "sweetalert2": "^11.10.1",
+    "vue": "^3.3.10",
+    "vue-text-mask": "^6.1.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.1",

@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <label class="form-control w-full max-w-xs">
+  <div class="border-spacing-1 border-2 border-gray-800 p-3 w-3/4 md:w-1/2">
+    <h1 class="justify-center items-center flex font-extrabold text-xl">
+      Input Jawaban
+    </h1>
+    <label class="form-control">
       <div class="label">
         <span class="label-text">Jawaban yang benar</span>
         <span class="label-text-alt">Jumlah soal {{ characterCount1 }}</span>
@@ -8,17 +11,45 @@
       <input
         v-model="inputText1"
         placeholder="Input kunci Jawaban..."
-        class="input input-bordered w-full max-w-xs"
+        class="input input-bordered"
+        :disabled="disableInputText1"
       />
+      <button
+        class="btn btn-primary mt-3"
+        :disabled="inputText1.length === 0"
+        @click="handleButtonClick"
+      >
+        {{ disableInputText1 ? "Buka" : "Kunci" }} Jawaban
+      </button>
+      <!-- Input Nopes -->
+      <div class="label">
+        <span class="label-text">No Pendaftaran</span>
+      </div>
+      <input
+        v-model="formattedNumber"
+        :mask="numberMask"
+        placeholder="XX-XX-XXX"
+        class="input input-bordered"
+        @input="handleNumberInput"
+        maxlength="7"
+      />
+      <!-- Input Siswa -->
       <div class="label">
         <span class="label-text">Hasil jawaban siswa</span>
       </div>
       <input
         v-model="inputText2"
         placeholder="Input Hasil siswa..."
-        class="input input-bordered w-full max-w-xs"
+        class="input input-bordered"
         v-bind:maxlength="characterCount1"
       />
+      <button
+        class="btn btn-primary mt-3"
+        @click="simpan"
+        :disabled="(inputText2.length === 0, formattedNumber.length === 0)"
+      >
+        Simapan
+      </button>
       <div class="label">
         <span class="label-text-alt"
           >Jumlah jawaban: {{ characterCount2 }}</span
@@ -57,16 +88,50 @@
 
 <script setup>
 import { ref, watchEffect, computed } from "vue";
+import Swal from "sweetalert2";
 
 // Reactive variables to store the input texts
 const inputText1 = ref("");
 const inputText2 = ref("");
-
+const formattedNumber = ref("");
 // Reactive variables to store the processed texts
 const processedText1 = ref("");
 const processedText2 = ref("");
-
+const disableInputText1 = ref(false);
 // Watch for changes in the inputText1 variable
+
+const simpan = () => {
+  if (!inputText1.value) {
+    Swal.fire({
+      title: "Simpan",
+      text: "Data gagal Disimpan karena jawaban yang benar harus disi",
+      icon: "warning",
+    });
+    return;
+  }
+  if (!inputText2.value) {
+    Swal.fire({
+      title: "Simpan",
+      text: "Data gagal Disimpan karena jawaban siswa kosong",
+      icon: "warning",
+    });
+    return;
+  }
+  if (!formattedNumber.value) {
+    Swal.fire({
+      title: "Simpan",
+      text: "Data gagal Disimpan karena No Peserta Kosong",
+      icon: "warning",
+    });
+    return;
+  }
+
+  Swal.fire({
+    title: "Simpan",
+    text: "Data Berhasil Disimpan",
+    icon: "success",
+  });
+};
 watchEffect(() => {
   // Access the input text through the reactive variable
   const textToProcess = inputText1.value;
@@ -122,4 +187,19 @@ const differingPositions = computed(() => {
 
   return positions;
 });
+const handleButtonClick = () => {
+  // Your button click logic here
+  disableInputText1.value = !disableInputText1.value;
+};
+const handleNumberInput = (event) => {
+  const inputValue = event.target.value;
+  // Remove non-numeric characters from the input
+  const numericValue = inputValue.replace(/\D/g, "");
+
+  // Format the number using the desired pattern
+  formattedNumber.value = numericValue.replace(
+    /(\d{2})(\d{2})(\d{3})/,
+    "$1-$2-$3"
+  );
+};
 </script>
